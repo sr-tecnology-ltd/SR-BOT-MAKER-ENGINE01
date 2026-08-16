@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "BotNode": {
+      "title": "Bot Node",
+      "description": "Configuration and state for a deployed bot instance.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "token": { "type": "string" },
+        "ownerId": { "type": "number" },
+        "type": { "type": "string", "enum": ["autopay", "upi", "crypto", "star"] },
+        "theme": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "config": { "$ref": "#/entities/SubBotConfig" }
+      },
+      "required": ["id", "token", "ownerId", "type", "createdAt", "config"]
+    },
+    "SubBotConfig": {
+      "title": "Bot Config",
+      "description": "Detailed configuration for a sub-bot.",
+      "type": "object",
+      "properties": {
+        "referBonus": { "type": "number" },
+        "dailyBonus": { "type": "number" },
+        "minReferForPayout": { "type": "number" },
+        "minWithdraw": { "type": "number" },
+        "maxWithdraw": { "type": "number" },
+        "withdrawTax": { "type": "number" },
+        "withdrawStatus": { "type": "boolean" },
+        "botStatus": { "type": "boolean" },
+        "antiBot": { "type": "boolean" },
+        "autoPayout": { "type": "boolean" },
+        "amountInWhole": { "type": "boolean" },
+        "userAlerts": { "type": "boolean" },
+        "botOffText": { "type": "string" },
+        "withdrawOffText": { "type": "string" },
+        "forceJoinChannels": { "type": "array", "items": { "type": "string" } },
+        "admins": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Data for a user within a specific bot node.",
+      "type": "object",
+      "properties": {
+        "balance": { "type": "number" },
+        "referrals": { "type": "number" },
+        "walletId": { "type": "string" },
+        "isBanned": { "type": "boolean" },
+        "lastDailyClaim": { "type": "number" },
+        "verified": { "type": "boolean" },
+        "joinedAt": { "type": "number" }
+      },
+      "required": ["balance", "referrals", "joinedAt"]
+    },
+    "WithdrawalRequest": {
+      "title": "Withdrawal Request",
+      "description": "A pending or completed withdrawal request.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "number" },
+        "amount": { "type": "number" },
+        "wallet": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "success"] }
+      }
+    }
+  },
+  "firestore": {
+    "nodes": {
+      "schema": "BotNode",
+      "description": "Information about all deployed bots."
+    },
+    "nodes/{nodeId}/users": {
+      "schema": "UserProfile",
+      "description": "Users of a specific bot."
+    },
+    "nodes/{nodeId}/withdrawals": {
+      "schema": "WithdrawalRequest",
+      "description": "Withdrawal history and pending requests for a bot."
+    },
+    "system": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "lastHeartbeat": { "type": "number" },
+          "uptime": { "type": "number" },
+          "nodeCount": { "type": "number" }
+        }
+      },
+      "description": "Server health and heartbeat monitoring."
+    }
+  }
+}

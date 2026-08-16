@@ -1,0 +1,6 @@
+{
+  "name": "RJ Bot Maker Hub - Pro Deployment Engine",
+  "description": "Enterprise-grade Telegram bot deployment engine. Build and host Auto-Pay, UPI, Crypto, and Star payment bots with zero coding. 24/7 Cloud Hosting and specialized Node management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

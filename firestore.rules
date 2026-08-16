@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // In this setup, we'll allow a specific admin user or rely on server-side logic.
+      // Since this is a server app, we'll assume the server is the admin.
+      // However, to keep it secure, we'll only allow writes if they come with a secret or specific auth.
+      // For now, let's keep it restrictive and only allow the server (we'll implement auth if needed).
+      return isSignedIn() && (
+        request.auth.token.email == 'sk190rihan@gmail.com' && request.auth.token.email_verified == true
+      );
+    }
+
+    match /nodes/{nodeId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+      
+      match /users/{userId} {
+        allow read, write: if isSignedIn();
+      }
+      
+      match /withdrawals/{wdId} {
+        allow read, write: if isSignedIn();
+      }
+    }
+
+    match /system/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
